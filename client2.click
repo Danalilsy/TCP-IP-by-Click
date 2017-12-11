@@ -1,6 +1,6 @@
 require(library /home/comnetsii/elements/routerport.click);
 
-define($in_mac 	A2:8a:66:3e:58:df, $out_mac 8a:ff:3b:d2:95:9a, $dev veth10)
+define($in_mac 7e:e5:b5:77:e2:1e, $out_mac 0e:2e:8e:3d:c5:b2, $dev veth4)
 
 //rp :: LossyRouterPort(DEV $dev, IN_MAC $in_mac , OUT_MAC $out_mac, LOSS 0.9, DELAY 0.2 );
 rp::RouterPort(DEV $dev, IN_MAC $in_mac , OUT_MAC $out_mac);

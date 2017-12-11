@@ -24,7 +24,7 @@ BasicRouter::BasicRouter(): timerHello(this), timerRouting(this), timerQueuePop(
 	dist = NULL;
 	topology = NULL;
 	updated = NULL;
-	
+	ECNthre = 10;
 
 }
 
@@ -90,12 +90,15 @@ void BasicRouter::run_timer(Timer *timer) {
 	if (timer == &timerQueuePop) {
 		int size = packetQueue.size();
 		if (size == 0) {
+			timerQueuePop.schedule_after_sec(periodQueuePop);
 			return;
 		}
 		else {
-			struct IP_Header * header = packetQueue.front();
+			click_chatter("[Router %u] Queue size = %d", myIP, size);
+			Packet * packet = packetQueue.front();
 			packetQueue.pop();
-			if(size>10) header
+			struct IP_Header *header = (struct IP_Header *)packet->data();
+			if (size > ECNthre) header->ECN = true;
 			if (forwardTable[header->destination] == -1) {
 				click_chatter("[Router %u] Fail to transfer Data from %u to destination %u because of disconnection with %u", myIP, header->source, header->destination, header->destination);
 			}
@@ -104,6 +107,7 @@ void BasicRouter::run_timer(Timer *timer) {
 				output(next_port).push(packet);
 			}
 		}
+		timerQueuePop.schedule_after_sec(periodQueuePop);
 	}
 	else if (timer == &timerHello) {
 		click_chatter("[Router %u] Sends Hello to adjacent nodes for the %u-th time", myIP, ++roundHello);
@@ -221,14 +225,8 @@ void BasicRouter::push(int port, Packet *packet) {
 	struct IP_Header *header = (struct IP_Header *)packet->data();
 	if(header->type == DATA || header->type == ACK || header->type == SYN || header->type == SYNACK || header->type == FIN) {
 		click_chatter("[Router %u] Received Data from %u with destination %u",myIP, header->source, header->destination);
-		packetQueue.push(header);
-		if (forwardTable[header->destination] == -1) {
-			click_chatter("[Router %u] Fail to transfer Data from %u to destination %u because of disconnection with %u",myIP, header->source, header->destination, header->destination);
-		}
-		else {
-			int next_port = portTable[forwardTable[header->destination]];
-			output(next_port).push(packet);
-		}
+		packetQueue.push(packet);
+		
 	}
 	else if (header->type == HELLO || header->type == EDGE) {
 		if (header->type == HELLO) {

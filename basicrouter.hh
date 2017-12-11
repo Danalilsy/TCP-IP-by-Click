@@ -3,6 +3,7 @@
 #include <click/element.hh>
 #include <click/timer.hh>
 #include <click/hashtable.hh>
+#include <click/packet.hh>
 #include <queue>
 using namespace std;
 
@@ -40,10 +41,8 @@ class BasicRouter : public Element {
 		int nodeNum;
 		int outPort;
 		int idHello;
-		queue<struct IP_Header *> packetQueue;
-		
-
-
+		queue<Packet *> packetQueue;
+		int ECNthre;
 		
 }; 
 
