@@ -5,6 +5,6 @@ rp1 :: RouterPort(DEV $dev1, IN_MAC $in_mac1 , OUT_MAC $out_mac1 );
 rp2 :: RouterPort(DEV $dev2, IN_MAC $in_mac2 , OUT_MAC $out_mac2 );
 
 
-router::BasicRouter(MY_IP 1, OUT_PORT_NUM 2, TOTAL_NODE_NUM 3);
+router::BasicRouter(MY_IP 2, OUT_PORT_NUM 2, TOTAL_NODE_NUM 3);
 rp1->[0]router[0]->rp1;
 rp2->[1]router[1]->rp2;

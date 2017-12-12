@@ -43,7 +43,6 @@ class BasicRouter : public Element {
 		int idHello;
 		queue<Packet *> packetQueue;
 		int ECNthre;
-		
 }; 
 
 CLICK_ENDDECLS

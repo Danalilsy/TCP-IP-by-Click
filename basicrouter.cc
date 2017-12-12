@@ -127,7 +127,7 @@ void BasicRouter::run_timer(Timer *timer) {
 		timerHello.schedule_after_sec(periodHello);
 	}
 	else if (timer == &timerRouting){
-		click_chatter("[Router %u] Recalculates routing table for the %u-th time", myIP, ++roundRouting);
+		click_chatter("[Router %u] ========== Recalculates routing table for the %u-th time ==========", myIP, ++roundRouting);
 		/*click_chatter("topology is:");
 		for (int i = 0; i < nodeNum; i++) {
 			for (int j = 0; j < nodeNum; j++) {
@@ -214,6 +214,12 @@ void BasicRouter::run_timer(Timer *timer) {
 		}
 		else
 			click_chatter("[Router %u] But nothing changed",myIP);
+		for (int i = 0; i < nodeNum; i++) {
+			for (int j = 0; j < nodeNum; j++) {
+				if (i == j) topology[i][j] = 0;
+				else topology[i][j] = MAX;
+			}
+		}
 		timerRouting.schedule_after_sec(periodRouting);
 	}
 	else {
